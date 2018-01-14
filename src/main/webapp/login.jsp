@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,28 +16,39 @@
 </head>
 <body>
 
-<!--Nav bar-->
-<div id="includeNav"></div>
+        <!--Nav bar-->
+        <div id="includeNav"></div>
 
-<div class="container-fluid text-center">
-    <!--left content-->
-    <div class="row content">
-        <div class="col-sm-4">
-        </div>
-        <!--Main Content-->
-        <div class="col-sm-6 text-left">
+        <div class="container-fluid text-center">
+            <!--left content-->
+            <div class="row content">
+                <div class="col-sm-4">
+                </div>
+                <!--Main Content-->
+                <div class="col-sm-6 text-left">
             <h1>Login</h1>
-            <form action="#" method="post"  role="form" data-toggle="validator" >
+            <form action="/employee" method="post"  role="form" data-toggle="validator" >
+                <c:if test ="${empty action}">
+                    <c:set var="action" value="login"/>
+                </c:if>
+                <input type="hidden" id="action" name="action" value="${action}">
+
+                <c:if test="${requestScope.auth eq 'failed'}">
+                <div class="alert alert-danger col-xs-8" role="alert">
+                    Authentication failed, try again.
+                </div>
+            </c:if>
+
                 <div class="row">
                     <div class="form-group col-xs-8">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                     </div>
 
                     <div class="form-group col-xs-8">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                     </div>
                 </div>
 

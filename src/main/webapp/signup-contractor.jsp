@@ -5,6 +5,9 @@
   Time: 5:11 PM
   To change this template use File | Settings | File Templates.
 --%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,13 +24,6 @@
 </head>
 <body>
 
-private String firstName;
-private String lastName;
-
-private String phoneNumber;
-
-private String email;
-private String password;
 <!--Nav bar-->
 <div id="includeNav"></div>
 
@@ -40,32 +36,39 @@ private String password;
     <!--Main Content-->
     <div class="col-sm-6 text-left">
       <h1>Contractor Sign Up</h1>
-      <form action="#" method="post"  role="form" data-toggle="validator" >
+      <form action="/employee" method="post"  role="form" data-toggle="validator" >
+        <c:if test ="${empty action}">
+          <c:set var="action" value="add"/>
+        </c:if>
+        <input type="hidden" id="action" name="action" value="${action}">
+        <input type="hidden" id="type" name="type" value="CONTRACTOR">
+        <input type="hidden" id="idEmployee" name="idEmployee" value="${employee.id}">
+
         <div class="row">
           <div class="form-group col-xs-8">
-            <label for="contractorFirstName">First Name</label>
-            <input type="firstName" class="form-control" id="contractorFirstName" placeholder="Enter first name">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" name="firstName" value="${employee.firstName}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="contractorLastName">Last Name</label>
-            <input type="lastName" class="form-control" id="contractorLastName" placeholder="Enter last name">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Enter last name"  name="lastName" value="${employee.lastName}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="contractorPhoneNumber">Phone Number</label>
-            <input type="phoneNumber" class="form-control" id="contractorPhoneNumber" placeholder="Enter phone number">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="text" class="form-control" id="phoneNumber" placeholder="Enter phone number"  name="phoneNumber" value="${employee.phoneNumber}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="contractorEmail">Email address</label>
-            <input type="email" class="form-control" id="contractorEmail" aria-describedby="emailHelp" placeholder="Enter email">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email"  name="email" value="${employee.email}" required="true">
             <small id="emailHelp" class="form-text text-muted">Please enter your corporate email.</small>
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="contractorPassword">Password</label>
-            <input type="password" class="form-control" id="contractorPassword" placeholder="Password">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password"  name="password" value="${employee.password}" required="true">
           </div>
         </div>
 

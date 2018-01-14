@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.example.service.EmployeeService;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -12,15 +14,23 @@ public class ServiceCall {
 
     private String title;
     private String description;
-    private long clientID;
+    private Client client;
     private ServiceCallStatus status;
 
-    public ServiceCall(String title, String description, long clientID, ServiceCallStatus status) {
+    public ServiceCall(String title, String description, long clientID, ServiceCallStatus status) throws Exception {
         this.title = title;
         this.description = description;
         this.status = status;
         this.id = counter.incrementAndGet();
-        this.clientID = clientID;
+        this.client = (Client)EmployeeService.getInstance().getEmployee(clientID);
+    }
+
+    public ServiceCall(String title, String description, long clientID) throws Exception {
+        this.title = title;
+        this.description = description;
+        this.status = ServiceCallStatus.OPEN;
+        this.id = counter.incrementAndGet();
+        this.client = (Client)EmployeeService.getInstance().getEmployee(clientID);
     }
 
     public long getId() {
@@ -31,12 +41,12 @@ public class ServiceCall {
         this.id = id;
     }
 
-    public long getClientID() {
-        return clientID;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClientID(long clientID) {
-        this.clientID = clientID;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public long getAssignedTo() {

@@ -5,6 +5,8 @@
   Time: 5:11 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,42 +35,53 @@
     <!--Main Content-->
     <div class="col-sm-6 text-left">
       <h1>Client Sign Up</h1>
-      <form action="#" method="post"  role="form" data-toggle="validator" >
+      <form action="/employee" method="post"  role="form" data-toggle="validator" >
+        <c:if test ="${empty action}">
+          <c:set var="action" value="add"/>
+        </c:if>
+        <input type="hidden" id="action" name="action" value="${action}">
+        <input type="hidden" id="type" name="type" value="CLIENT">
+        <input type="hidden" id="idEmployee" name="idEmployee" value="${employee.id}">
         <div class="row">
           <div class="form-group col-xs-8">
-            <label for="clientName">Name</label>
-            <input type="name" class="form-control" id="clientName" placeholder="Enter name">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Enter first name" value="${employee.firstName}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="clientDepartment">Department</label>
-            <input type="department" class="form-control" id="clientDepartment" placeholder="Enter department">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Enter last name" value="${employee.lastName}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="clientRole">Role</label>
-            <input type="role" class="form-control" id="clientRole" placeholder="Enter role">
+            <label for="department">Department</label>
+            <input type="text" class="form-control" name="department" id="department" placeholder="Enter department"  value="${employee.department}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="clientAddress">Address</label>
-            <input type="address" class="form-control" id="clientAddress" placeholder="Enter address">
+            <label for="role">Role</label>
+            <input type="text" class="form-control" name="role" id="role" placeholder="Enter role"  value="${employee.role}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="clientPhoneNumber">Phone Number</label>
-            <input type="phoneNumber" class="form-control" id="clientPhoneNumber" placeholder="Enter phone number">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" name="address" id="address" placeholder="Enter address"  value="${employee.address}" required="true">
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="clientEmail">Email address</label>
-            <input type="email" class="form-control" id="clientEmail" aria-describedby="emailHelp" placeholder="Enter email">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Enter phone number" value="${employee.phoneNumber}" required="true">
+          </div>
+
+          <div class="form-group col-xs-8">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" placeholder="Enter email"  value="${employee.email}" required="true">
             <small id="emailHelp" class="form-text text-muted">Please enter your corporate email.</small>
           </div>
 
           <div class="form-group col-xs-8">
-            <label for="contractorPassword">Password</label>
-            <input type="password" class="form-control" id="contractorPassword" placeholder="Password">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password"  value="${employee.password}" required="true">
           </div>
         </div>
 

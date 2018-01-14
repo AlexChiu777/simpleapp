@@ -23,7 +23,7 @@
         <!--Main Content-->
         <div class="col-sm-6 text-left">
             <h1>About</h1>
-
+            <p>Simple About page here.</p>
         </div>
         <div class="col-sm-3">
         </div>
