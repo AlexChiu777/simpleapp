@@ -1,7 +1,10 @@
 package com.example.servlet;
 
+import com.example.model.Employee;
+import com.example.model.EmployeeType;
 import com.example.model.ServiceCall;
 import com.example.model.ServiceCallStatus;
+import com.example.service.EmployeeService;
 import com.example.service.ServiceCallService;
 
 import javax.servlet.RequestDispatcher;
@@ -34,6 +37,9 @@ public class ServiceCallServlet extends HttpServlet {
                 case "searchById":
                     searchServiceCallById(req, resp);
                     break;
+                case "searchByEmployeeId":
+                    redirectSearchById(req, resp);
+                    break;
             }
         } else {
             List<ServiceCall> result = serviceCallService.getAllServiceCalls();
@@ -41,18 +47,46 @@ public class ServiceCallServlet extends HttpServlet {
         }
     }
 
+    private void redirectSearchById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        long idEmployee = Integer.valueOf(req.getParameter("idEmployee"));
+
+        Employee employee = null;
+        try {
+            employee = EmployeeService.getInstance().getEmployee(idEmployee);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<ServiceCall> result = null;
+        if (employee != null) {
+            if (employee.getType().equals(EmployeeType.CONTRACTOR)) {
+                result = serviceCallService.getServiceCallsForContractor(idEmployee);
+            } else if (employee.getType().equals(EmployeeType.CLIENT)) {
+                result = serviceCallService.getServiceCallsForClient(idEmployee);
+            }
+        }
+        forwardListServiceCall(req, resp, result);
+    }
+
     private void searchServiceCallById(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        long idServiceCall = Integer.valueOf(req.getParameter("idServiceCall"));
-        ServiceCall serviceCall = null;
-        try {
-            serviceCall = serviceCallService.getServiceCallById(idServiceCall);
-        } catch (Exception ex) {
-            Logger.getLogger(ServiceCallServlet.class.getName()).log(Level.SEVERE, null, ex);
+        if (req.getParameter("idServiceCall") != null){
+            long idServiceCall = Integer.valueOf(req.getParameter("idServiceCall"));
+
+            ServiceCall serviceCall = null;
+            try {
+                serviceCall = serviceCallService.getServiceCallById(idServiceCall);
+            } catch (Exception ex) {
+                Logger.getLogger(ServiceCallServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            req.setAttribute("serviceCall", serviceCall);
+            req.setAttribute("action", "edit");
+            req.setAttribute("serviceCallStatus", serviceCall.getStatus());
+        } else {
+            req.setAttribute("serviceCallStatus", ServiceCallStatus.OPEN);
         }
-        req.setAttribute("serviceCall", serviceCall);
-        req.setAttribute("action", "edit");
-        String nextJSP = "/add-serviceCall.jsp";
+        String nextJSP = "/add-servicecall.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
         dispatcher.forward(req, resp);
     }
@@ -73,9 +107,9 @@ public class ServiceCallServlet extends HttpServlet {
             case "add":
                 addServiceCallAction(req, resp);
                 break;
-            /*case "edit":
+            case "edit":
                 editServiceCallAction(req, resp);
-                break;*/
+                break;
         }
 
     }
@@ -84,43 +118,54 @@ public class ServiceCallServlet extends HttpServlet {
             throws ServletException, IOException {
         String title = req.getParameter("title");
         String description = req.getParameter("description");
-        String address = req.getParameter("address");
-        long clientID = Long.valueOf(req.getParameter("clientID"));
+        long idEmployee = Long.valueOf(req.getParameter("idEmployee"));
 
         ServiceCall serviceCall = null;
         try {
-            serviceCall = new ServiceCall(title, description, clientID, ServiceCallStatus.OPEN);
+            serviceCall = new ServiceCall(title, description, idEmployee, ServiceCallStatus.OPEN);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         long idServiceCall = serviceCallService.addServiceCall(serviceCall);
-        List<ServiceCall> serviceCallList = serviceCallService.getAllServiceCalls();
         req.setAttribute("idServiceCall", idServiceCall);
         String message = "The new serviceCall has been successfully created.";
         req.setAttribute("message", message);
-        forwardListServiceCall(req, resp, serviceCallList);
+        redirectSearchById(req, resp);
     }
 
-    /*private void editServiceCallAction(HttpServletRequest req, HttpServletResponse resp)
+    private void editServiceCallAction(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String title = req.getParameter("title");
         String description = req.getParameter("description");
-        String address = req.getParameter("address");
-        long clientID = Long.valueOf(req.getParameter("clientID"));
+        String status = req.getParameter("status");
+        long idServiceCall = Long.parseLong(req.getParameter("idServiceCall"));
+        long idEmployee = Long.parseLong(req.getParameter("idEmployee"));
 
         ServiceCall serviceCall = null;
         try {
-            serviceCall = new ServiceCall(title, description, clientID, ServiceCallStatus.OPEN);
+            serviceCall = ServiceCallService.getInstance().getServiceCallById(idServiceCall);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        long idServiceCall = serviceCallService.addServiceCall(serviceCall);
-        List<ServiceCall> serviceCallList = serviceCallService.getAllServiceCalls();
+        //update is done by contractor if it id isn't the same as original client
+        if (idEmployee != serviceCall.getClient().getId()) {
+            serviceCall.setAssignedTo(idEmployee);
+        } else {
+            serviceCall.setTitle(title);
+            serviceCall.setDescription(description);
+        }
+
+        serviceCall.setStatus(ServiceCallStatus.valueOf(status));
+
+        serviceCallService.updateServiceCall(serviceCall);
+
         req.setAttribute("idServiceCall", idServiceCall);
         String message = "The new serviceCall has been successfully created.";
         req.setAttribute("message", message);
-        forwardListServiceCall(req, resp, serviceCallList);
-    }*/
+
+
+        redirectSearchById(req, resp);
+    }
 }

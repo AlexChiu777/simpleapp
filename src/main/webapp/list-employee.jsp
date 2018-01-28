@@ -73,7 +73,8 @@
                                 </c:if>
                                 <tr class="${classSucess}">
                                     <td>
-                                        <a href="/employee?idEmployee=${employee.id}&searchAction=searchById">${employee.id}</a>
+                                        <%--<a href="/employee?idEmployee=${employee.id}&searchAction=searchById">${employee.id}</a>--%>
+                                        ${employee.id}
                                     </td>
                                     <td>${employee.firstName}</td>
                                     <td>${employee.lastName}</td>

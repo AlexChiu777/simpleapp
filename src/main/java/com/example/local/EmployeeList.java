@@ -21,7 +21,7 @@ public class EmployeeList {
         EMPLOYEE_LIST.add(new Client(111, "Super", "Employer", "Tech", "SuperEmployer", "18 Some Address Crs", "4114114234", "super@abc.com", "1234"));
         EMPLOYEE_LIST.add(new Client("Alex", "Chiu", "Tech", "Manager", "18 Some Address Crs", "4114114234", "alex@abc.com", "1234"));
         EMPLOYEE_LIST.add(new Client("John", "Smith", "Sales", "Manager", "20 Some Address Crs", "4114114234", "john@abc.com", "1234"));
-        EMPLOYEE_LIST.add(new Contractor("Alex", "Chiu", "1231231234", "alex@abc.com", "1234"));
+        EMPLOYEE_LIST.add(new Contractor("Alex", "Chiu", "1231231234", "con@abc.com", "1234"));
         EMPLOYEE_LIST.add(new Contractor("John", "Koo", "1231231234", "john@abc.com", "1234"));
         EMPLOYEE_LIST.add(new Admin("Alex", "Chiu", "abc@abc.com", "1234"));
 

@@ -57,6 +57,11 @@ public class EmployeeServlet extends HttpServlet {
         req.setAttribute("employee", employee);
         req.setAttribute("action", "edit");
         String nextJSP = "/signup-employee.jsp";
+        if (employee != null && employee.getType().equals(EmployeeType.CLIENT)) {
+            nextJSP = "/signup-client.jsp";
+        } else if (employee != null && employee.getType().equals(EmployeeType.CONTRACTOR)) {
+            nextJSP = "/signup-contractor.jsp";
+        }
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
         dispatcher.forward(req, resp);
     }

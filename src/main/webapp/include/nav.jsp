@@ -14,12 +14,18 @@
             <ul class="nav navbar-nav">
                 <li><a href="home.jsp">Home</a></li>
 
-                <c:if test="${sessionScope.user != null}">
+                <%-- ADMIN will see everything --%>
+                <c:if test="${sessionScope.user != null && sessionScope.user.type eq 'ADMIN'}">
                     <li><a href="/servicecall">Service Calls</a></li>
                 </c:if>
 
                 <c:if test="${sessionScope.user != null && sessionScope.user.type eq 'ADMIN'}">
                     <li><a href="/employee">Employees</a></li>
+                </c:if>
+
+                <%-- CLIENT will see only their own service calls --%>
+                <c:if test="${sessionScope.user != null && sessionScope.user.type != 'ADMIN'}">
+                    <li><a href="/servicecall?searchAction=searchByEmployeeId&idEmployee=${sessionScope.user.id}">Service Calls</a></li>
                 </c:if>
 
                 <li><a href="about.jsp">About</a></li>

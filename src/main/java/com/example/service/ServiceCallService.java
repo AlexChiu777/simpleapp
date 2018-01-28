@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.local.ServiceCallMap;
 import com.example.model.ServiceCall;
+import com.example.model.ServiceCallStatus;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -31,10 +32,22 @@ public class ServiceCallService {
     }
 
     public List<ServiceCall> getServiceCallsForClient(long clientID) {
-        return new ArrayList<>(serviceCallMap.get(clientID));
+        if (serviceCallMap.get(clientID) != null) {
+            return new ArrayList<>(serviceCallMap.get(clientID));
+        } else {
+            return new ArrayList<>();
+        }
     }
 
-
+    public List<ServiceCall> getServiceCallsForContractor(long contractorID) {
+        List<ServiceCall> serviceCallList = new ArrayList<>();
+        for (ServiceCall serviceCall: getAllServiceCalls()) {
+            if (serviceCall.getStatus() == ServiceCallStatus.OPEN || serviceCall.getAssignedTo() == contractorID) {
+                serviceCallList.add(serviceCall);
+            }
+        }
+        return serviceCallList;
+    }
 
     public ServiceCall getServiceCallById (long id) {
         List<ServiceCall> serviceCallList = getAllServiceCalls();
@@ -48,7 +61,7 @@ public class ServiceCallService {
         return null;
     }
 
-    public ServiceCall getSpecifcServiceCall (long clientID, long serviceCallID) throws Exception {
+  /*  public ServiceCall getSpecifcServiceCall (long clientID, long serviceCallID) throws Exception {
         List<ServiceCall> clientSpecificServiceCall = getServiceCallsForClient(clientID);
         Optional<ServiceCall> match
                 = clientSpecificServiceCall.stream()
@@ -59,7 +72,7 @@ public class ServiceCallService {
         } else {
             throw new Exception("The ServiceCall id " + serviceCallID + " not found");
         }
-    }
+    }*/
 
     public long addServiceCall(ServiceCall serviceCall) {
         List<ServiceCall> clientSpecificServiceCall = getServiceCallsForClient(serviceCall.getClient().getId());
@@ -78,6 +91,9 @@ public class ServiceCallService {
         ServiceCall serviceCall = getServiceCallById(tmp.getId());
         if (serviceCall != null) {
             serviceCall.setStatus(tmp.getStatus());
+            serviceCall.setAssignedTo(tmp.getAssignedTo());
+            serviceCall.setTitle(tmp.getTitle());
+            serviceCall.setDescription(tmp.getDescription());
         }
         return true;
     }

@@ -37,16 +37,25 @@
     <div class="col-sm-8 text-left">
       <h2>ServiceCall</h2>
 
-      <br></br>
       <!--ServiceCalls List-->
       <c:if test="${not empty message}">
         <div class="alert alert-success">
             ${message}
         </div>
       </c:if>
-      <form action="/serviceCall" method="post" id="serviceCallForm" role="form" >
+      <form action="/servicecall" method="post" id="serviceCallForm" role="form" >
         <input type="hidden" id="idServiceCall" name="idServiceCall">
         <input type="hidden" id="action" name="action">
+
+
+        <c:if test="${sessionScope.user.type == 'CLIENT'}">
+          <div style="margin: 40px 0px 20px 0px">
+            <a href="/servicecall?searchAction=searchById">
+              <button type="button" class="btn btn-primary">Add New</button>
+            </a>
+          </div>
+        </c:if>
+
 
         <div class="table-responsive">
               <c:choose>
@@ -78,26 +87,25 @@
 
                       <tr class="${classSucess}">
                         <td>
-                          <%--<a href="/serviceCall?idServiceCall=${serviceCall.id}&searchAction=searchById">${serviceCall.id}</a>--%>
-                              ${serviceCall.id}
+                            <a href="/servicecall?idServiceCall=${serviceCall.id}&searchAction=searchById">${serviceCall.id}</a>
                         </td>
                         <td>${serviceCall.title}</td>
                         <td>${serviceCall.description}</td>
                         <td>
                             <c:if test="${serviceCall.status eq 'OPEN'}">
-                              <span class="btn btn-primary">${serviceCall.status}</span>
+                              <span class="btn btn-primary disabled">${serviceCall.status}</span>
                             </c:if>
 
                             <c:if test="${serviceCall.status eq 'ACCEPTED'}">
-                              <span class="btn btn-warning">${serviceCall.status}</span>
+                              <span class="btn btn-warning disabled">${serviceCall.status}</span>
                             </c:if>
 
                             <c:if test="${serviceCall.status eq 'COMPLETE'}">
-                              <span class="btn btn-success">${serviceCall.status}</span>
+                              <span class="btn btn-success disabled">${serviceCall.status}</span>
                             </c:if>
 
                             <c:if test="${serviceCall.status eq 'INCOMPLETE'}">
-                              <span class="btn btn-danger">${serviceCall.status}</span>
+                              <span class="btn btn-danger disabled">${serviceCall.status}</span>
                             </c:if>
                         </td>
                         <td>${serviceCall.client.id}</td>
@@ -108,14 +116,6 @@
                         <td>${serviceCall.client.address}</td>
                         <td>${serviceCall.client.phoneNumber}</td>
                         <td>${serviceCall.client.email}</td>
-                        <%--<td><a href="#" id="remove"
-                               onclick="document.getElementById('action').value = 'remove';document.getElementById('idServiceCall').value = '${serviceCall.id}';
-
-                                       document.getElementById('serviceCallForm').submit();">
-                          <span class="glyphicon glyphicon-trash"/>
-                        </a>
-
-                        </td>--%>
                       </tr>
                     </c:forEach>
                   </tbody>
